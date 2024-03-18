@@ -220,43 +220,48 @@ pred traces {
 \*-----------------------*/
 
 pred procedure1[e: Elevator] {
+	// There are no requests if and only if the elevator is not moving 
 	no e.requests iff stayStill[e]
-
+	// putting priority of picking up request on the floor it is on
 	always pickUpCurIfRequesting[e]
-
+	// If there exists ANY requests below the current location means the elevator shall not move up
 	some (e.floor.^below & e.requests) => not moveUp[e]
+	// If there are no requests below the current floor, it shall not move down
 	no (e.floor.^below & e.requests) => not moveDown[e]
 }
 
 
 pred procedure2[e: Elevator] {
+	// The elevator is moving cont
 	not stayStill[e]
-
+	// it will pick up ppl on the way
 	always pickUpCurIfRequesting[e]
-
+	// Establishes that it can not move down until it is at the top, and it can not move up until it reaches the bottom
 	e.floor = Bottom => (not moveDown[e]) until e.floor = Top
 	e.floor = Top => (not moveUp[e]) until e.floor = Bottom
 }
 
 
 pred procedure3[e: Elevator] {
+	// Can't move  if there are no requests
 	no e.requests iff stayStill[e]
-
+	// Always pick up someone when there is a request on the current floor
  	always pickUpCurIfRequesting[e]
-
+	// Ensure that requests in one direction stays consistent and does not change direction until all upward or downward requests are completed
 	some (e.requests & e.floor.^above) => (not moveDown[e]) until no (e.requests & e.floor.^above)
 	some (e.requests & e.floor.^below) => (not moveUp[e]) until no (e.requests & e.floor.^below)
 }
 
 
 pred procedure4[e: Elevator] {
+	// Ensures same thing as before 
 	no e.requests iff stayStill[e]
 
 	always pickUpCurIfRequesting[e]
-	
+	// This enforces that we must complete each request individually to prevent completing multiple requests
 	(e.nextRequest in e.floor.^above) => not moveDown[e] until (e.nextRequest not in e.floor.^above)
 	(e.nextRequest in e.floor.^below) => not moveUp[e] until (e.nextRequest not in e.floor.^below)
-
+	// If there is not next request, we default to go to the botoom
 	(some e.requests) and (e.nextRequest not in e.requests) => e.nextRequest' in e.requests'
 	((no e.requests) and (some e.requests')) => e.nextRequest' in e.requests'
 }
@@ -272,11 +277,14 @@ pred procedure5[e: Elevator] {
 
 	(some e.requests) and (e.nextRequest not in e.requests) => e.nextRequest' in e.requests'
 	((no e.requests) and (some e.requests')) => e.nextRequest' in e.requests'
-
+	// Once we reach a requested floor, we open
 	pickUpEnabled[e] and (e.nextRequest = e.floor) => {
+		// if last direction is up
 		e.lastMove = Up => {
+			// we will allow  and complete for new requests that are above
 			some (e.requests' & e.floor.^above) => e.nextRequest' in (e.requests' & e.floor.^above)
 		} else {
+			// If the last direction is down, if there are new requests below, we complete taem
 			some (e.requests' & e.floor.^below) => e.nextRequest' in (e.requests' & e.floor.^below)
 		}
 	}
