@@ -54,16 +54,81 @@ open "elevator.frg"
 
 -- Hint: Think about what should / should not be possible for a typical elevator!
 
-// Property: Movement is only possible when the elevator's door is closed
+// Positive Preds
+// Movement is only possible when the elevator's door is closed
 pred elevatorOnlyMoveWhenDoorClosed[e: Elevator] {
 	e.floor != e.floor' => e.door = Closed
 }
+// The elevator does not move when the door is open
+pred elevatorDoesntOpenWhenMoving[e: Elevator] {
+	e.door = Open => e.floor = e.floor'
+}
+// Goes to bottom where there are no requests
+pred goToBottom[e: Elevator] {
+ 	e.requests =none => e.floor = Bottom
+}
+// The elevator door is closed and the elevator has not moved
+pred elevatorDoesntMoveWhenDoorClosed[e: Elevator] {
+	e.door = Closed and
+	e.floor = e.floor'
+}
+// Property: Elevator doesn't move when there are no requests
+pred elevatorDoesntMoveWithoutRequests[e: Elevator] {
+	e.requests = none => e.floor = e.floor'
+}
+
+// Negative Preds
+// The elevator is moving while the door is open 
+pred elevatorMoveWhenDoorOpen[e: Elevator] {
+	e.door = Open => e.floor != e.floor'
+}
+// The elevator is open with no requests
+pred elevatorOpenWithNoRequest[e: Elevator] {
+	e.door = Open
+	e.requests = none
+}
+// The elevator is at the bottom but is going to move down
+pred movingDownFromBottom[e: Elevator] {
+	e.floor = Bottom and 
+	e.floor'= e.floor.below
+}
+// The elevator is at the top but is going to move up
+pred movingUpFromTop[e: Elevator] {
+	e.floor = Top and 
+	e.floor'= e.floor.above
+}
+// The elevator is at the top when there are no requests
+pred atTop [e: Elevator] {
+	e.floor = Top and
+	e.requests=none
+}
 
 test expect {
-	-- TODO: test overall model properties here
+	// Positive tests
+	//  Movement is only possible when the elevator's door is closed
 	test1: {traces implies elevatorOnlyMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
-	
+	// the elevator does not move when the door is open
+	test2:{traces implies elevatorDoesntOpenWhenMoving[Elevator]} for exactly 1 Elevator is theorem
+	// When there are no requests, the elevator goes to the bottom
+	test3:{traces implies goToBottom[Elevator]} for exactly 1 Elevator is theorem
+	// The door does not need to be constantly moving when the door is closed. However, this fails!
+	// test4: { traces implies not elevatorDoesntMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
+	// The elevator will not change floors when there are no requests 
+	test5: {traces implies elevatorDoesntMoveWithoutRequests[Elevator]} for exactly 1 Elevator is sat
+
+	// Negative tests
+	// The door is open and moving is invalid
+	test6:{traces and elevatorMoveWhenDoorOpen[Elevator]} for exactly 1 Elevator is sat
+	// The door is open even though there are no requests, thus this not happening is sat
+	test7: {traces and elevatorOpenWithNoRequest[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is going to move down after it has reached the bottom floor is impossible
+	test8: {traces and movingDownFromBottom[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is going to move up after it has reached the top floor is impossible
+	test9: {traces and movingUpFromTop[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is not moving when there are requests is not expected 
+	test10:{traces and atTop[Elevator]} for exactly 1 Elevator is unsat
 }
+
 
 
 /*-------------------------------------------------*\
