@@ -237,6 +237,7 @@ pred procedure2[e: Elevator] {
 	// it will pick up ppl on the way
 	always pickUpCurIfRequesting[e]
 	// Establishes that it can not move down until it is at the top, and it can not move up until it reaches the bottom
+	// UNCERTAIN
 	e.floor = Bottom => (not moveDown[e]) until e.floor = Top
 	e.floor = Top => (not moveUp[e]) until e.floor = Bottom
 }

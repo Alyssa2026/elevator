@@ -14,30 +14,31 @@ open "elevator.frg"
 
 -- Procedure 1:
 -- This procedure establishes when to not move
---  // There are no requests if and only if the elevator is not moving 
-	// putting priority of picking up request on the floor it is on
+--  // The elevator should not move when there are no requests
+	// This procedure puts priority of picking up request on the floor it is on
 	// If there exists ANY requests below the current location means the elevator shall not move up
 	// If there are no requests below the current floor, it shall not move down
 
 -- Procedure 2:
---   This procedure describes continuous motion requirement sof the elevator 
+--   This procedure describes continuous motion requirement of the elevator 
 	// The elevator is moving continuously
-	// it will pick up ppl on the way when there is a request 
+	// it will pick up ppl on the way when there is a request at the current floor
 	// Establishes that it can not move down until it is at the top, and it can not move up until it reaches the bottom
 
 -- Procedure 3:
 --  This ensures we will complete requests in one direction, and only swtich after one direction is completed 
-	// Can't move  if there are no requests
-	// Always pick up someone when there is a request on the current floor
+	// Has the same initial requirements as 1,4,5 
 	// Ensure that requests in one direction stays consistent and does not change direction until all upward or downward requests are completed
 
 -- Procedure 4:
 --   Enforces completing and adding each request individually 
+	// Has the same initial requirements as 1,3,5 
 	// This enforces that we must complete each request individually to prevent completing multiple requests
 	// If there is not next request, we default to go to the botoom
 
 -- Procedure 5:
---   Allow to complete new requests when already moving in that direction
+--   Allow to complete current and new requests when already moving in that direction
+	// Has the same initial requirements as 1,4,3
 	// Once we reach a requested floor, we open
 	// if last direction is up
 		// we will allow  and complete for new requests that are above
