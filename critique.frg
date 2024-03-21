@@ -285,7 +285,7 @@ test expect {
 	// Now we accound for 2 elevators
 	// After running this, it seems newfp5 is the one that fails 
 	// newfp5: {traces and always procedure5[Elevator] implies forwardProgress[e]} for exactly 2 Elevator is theorem, FAILS
-	newFixedfp5: {elevatorControl implies multiElevatorFix[Elevator]} for exactly 2 Elevator is theorem  // New and passes
+	newFixedfp5: {elevatorControl implies multiElevatorFix} for exactly 2 Elevator is theorem  // New and passes
 	newfp52: {elevatorControl implies newRequest[Elevator]} for exactly 2 Elevator is sat
 	newfp53: {elevatorControl implies noMoveUpIfRequestsBelow[Elevator]} for exactly 2 Elevator is sat
 	newfp54: {elevatorControl implies stayStill[Elevator]} for exactly 2 Elevator is sat
