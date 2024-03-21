@@ -274,11 +274,26 @@ pred elevatorControl {
 
 -- TODO: Multi-Elevator Fix
 -- Add a constraint that ensures procedures work for multiple elevators. 
+pred multiElevatorFix {
+    all e: Elevator | forwardProgress[e]
+}
 
 
+test expect {
+	-- TODO: Procedure 5 Checks
+	-- Paste and edit your Procedure 5 checks here.
+	// Now we accound for 2 elevators
+	// After running this, it seems newfp5 is the one that fails 
+	// newfp5: {traces and always procedure5[Elevator] implies forwardProgress[e]} for exactly 2 Elevator is theorem, FAILS
+	newFixedfp5: {traces and always procedure5[Elevator] implies multiElevatorFix} for exactly 2 Elevator is theorem  // New and passes
+	newfp52: {traces and always procedure5[Elevator] implies newRequest[Elevator]} for exactly 2 Elevator is sat
+	newfp53: {traces and always procedure5[Elevator] implies noMoveUpIfRequestsBelow[Elevator]} for exactly 2 Elevator is sat
+	newfp54: {traces and always procedure5[Elevator] implies stayStill[Elevator]} for exactly 2 Elevator is sat
+	newfp55: {traces and always procedure5[Elevator] and requestsUpDontMoveUp[Elevator]} for exactly 2 Elevator is unsat
+	newfp56: {traces and always procedure5[Elevator] implies finishRequestsDown[Elevator]} for exactly 2 Elevator is sat
 
--- TODO: Procedure 5 Checks
--- Paste and edit your Procedure 5 checks here.
+}
+
 -- These should not all pass before you implement a multi-elevator fix,
 -- and should pass after you include the fix. 
 -- Note: When we say "pass", we mean that the tests that passed in the non-challenge
