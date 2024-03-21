@@ -274,8 +274,8 @@ pred elevatorControl {
 
 -- TODO: Multi-Elevator Fix
 -- Add a constraint that ensures procedures work for multiple elevators. 
-// We need to enforce that all the elevators can possibly be enabled, not each one can be enabled 
-// individually
+// We need to enforce that given ALL the elevators, there is something possibly enabled, not each one can be enabled 
+// individually eventually
 pred multiElevatorFix {
     all e: Elevator | forwardProgress[e]
 }
