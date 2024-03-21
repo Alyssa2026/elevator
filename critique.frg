@@ -109,31 +109,31 @@ pred atTop [e: Elevator] {
 	e.requests=none
 }
 
-// test expect {
-// 	// Positive tests
-// 	//  Movement is only possible when the elevator's door is closed
-// 	test1: {traces implies elevatorOnlyMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
-// 	// the elevator does not move when the door is open
-// 	test2:{traces implies elevatorDoesntOpenWhenMoving[Elevator]} for exactly 1 Elevator is theorem
-// 	// When there are no requests, the elevator goes to the bottom
-// 	test3:{traces implies goToBottom[Elevator]} for exactly 1 Elevator is theorem
-// 	// The door does not need to be constantly moving when the door is closed. However, this fails!
-// 	// test4: { traces implies not elevatorDoesntMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
-// 	// The elevator will not change floors when there are no requests 
-// 	test5: {traces implies elevatorDoesntMoveWithoutRequests[Elevator]} for exactly 1 Elevator is sat
+test expect {
+	// Positive tests
+	//  Movement is only possible when the elevator's door is closed
+	test1: {traces implies elevatorOnlyMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
+	// the elevator does not move when the door is open
+	test2:{traces implies elevatorDoesntOpenWhenMoving[Elevator]} for exactly 1 Elevator is theorem
+	// When there are no requests, the elevator goes to the bottom
+	test3:{traces implies goToBottom[Elevator]} for exactly 1 Elevator is theorem
+	// The door does not need to be constantly moving when the door is closed. However, this fails!
+	// test4: { traces implies not elevatorDoesntMoveWhenDoorClosed[Elevator]} for exactly 1 Elevator is theorem
+	// The elevator will not change floors when there are no requests 
+	test5: {traces implies elevatorDoesntMoveWithoutRequests[Elevator]} for exactly 1 Elevator is sat
 
-// 	// Negative tests
-// 	// The door is open and moving is invalid
-// 	test6:{traces and elevatorMoveWhenDoorOpen[Elevator]} for exactly 1 Elevator is sat
-// 	// The door is open even though there are no requests, thus this not happening is sat
-// 	test7: {traces and elevatorOpenWithNoRequest[Elevator]} for exactly 1 Elevator is unsat
-// 	// The elevator is going to move down after it has reached the bottom floor is impossible
-// 	test8: {traces and movingDownFromBottom[Elevator]} for exactly 1 Elevator is unsat
-// 	// The elevator is going to move up after it has reached the top floor is impossible
-// 	test9: {traces and movingUpFromTop[Elevator]} for exactly 1 Elevator is unsat
-// 	// The elevator is not moving when there are requests is not expected 
-// 	test10:{traces and atTop[Elevator]} for exactly 1 Elevator is unsat
-// }
+	// Negative tests
+	// The door is open and moving is invalid
+	test6:{traces and elevatorMoveWhenDoorOpen[Elevator]} for exactly 1 Elevator is sat
+	// The door is open even though there are no requests, thus this not happening is sat
+	test7: {traces and elevatorOpenWithNoRequest[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is going to move down after it has reached the bottom floor is impossible
+	test8: {traces and movingDownFromBottom[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is going to move up after it has reached the top floor is impossible
+	test9: {traces and movingUpFromTop[Elevator]} for exactly 1 Elevator is unsat
+	// The elevator is not moving when there are requests is not expected 
+	test10:{traces and atTop[Elevator]} for exactly 1 Elevator is unsat
+}
 
 
 
@@ -200,53 +200,53 @@ pred finishRequestsDown[e: Elevator]{
 	not moveUp[e] until (e.nextRequest not in e.floor.^below)
 }
 
-// test expect {
-// 	-- TODO: test procedure1 properties here
-// 	fp1: {traces and always procedure1[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
-// 	fp12: {traces and always procedure1[Elevator] implies noMoveUpIfRequestsBelow[Elevator]} for exactly 1 Elevator is sat
-// 	fp13: {traces and always procedure1[Elevator] implies stayStill[Elevator]} for exactly 1 Elevator is sat
-// 	fp14: {traces and always procedure1[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
-// }
+test expect {
+	-- TODO: test procedure1 properties here
+	fp1: {traces and always procedure1[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
+	fp12: {traces and always procedure1[Elevator] implies noMoveUpIfRequestsBelow[Elevator]} for exactly 1 Elevator is sat
+	fp13: {traces and always procedure1[Elevator] implies stayStill[Elevator]} for exactly 1 Elevator is sat
+	fp14: {traces and always procedure1[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
+}
 
-// test expect {
-// 	-- TODO: test procedure2 properties here
-// 	fp2: {traces and always procedure2[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
-// 	fp22: {traces and always procedure2[Elevator] and stayStill[Elevator]} for exactly 1 Elevator is unsat
-// 	fp23: {traces and always procedure2[Elevator] and canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is unsat
-// 	fp24: {traces and always procedure2[Elevator] and finishRequestsDown[Elevator]} for exactly 1 Elevator is unsat
-// }
+test expect {
+	-- TODO: test procedure2 properties here
+	fp2: {traces and always procedure2[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
+	fp22: {traces and always procedure2[Elevator] and stayStill[Elevator]} for exactly 1 Elevator is unsat
+	fp23: {traces and always procedure2[Elevator] and canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is unsat
+	fp24: {traces and always procedure2[Elevator] and finishRequestsDown[Elevator]} for exactly 1 Elevator is unsat
+}
 
-// test expect {
-// 	-- TODO: test procedure3 properties here
-// 	fp3: {traces and always procedure3[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
-// 	fp32: {traces and always procedure3[Elevator] and stayStill[Elevator]} for exactly 1 Elevator is sat
-// 	fp33: {traces and always procedure3[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
-// 	fp34: {traces and always procedure3[Elevator] and completedCurrRequest[Elevator]} for exactly 1 Elevator is unsat
-// 	fp35: {traces and always procedure3[Elevator] and newRequest[Elevator]} for exactly 1 Elevator is sat
-// 	fp36: {traces and always procedure3[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
-// }
+test expect {
+	-- TODO: test procedure3 properties here
+	fp3: {traces and always procedure3[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
+	fp32: {traces and always procedure3[Elevator] and stayStill[Elevator]} for exactly 1 Elevator is sat
+	fp33: {traces and always procedure3[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
+	fp34: {traces and always procedure3[Elevator] and completedCurrRequest[Elevator]} for exactly 1 Elevator is unsat
+	fp35: {traces and always procedure3[Elevator] and newRequest[Elevator]} for exactly 1 Elevator is sat
+	fp36: {traces and always procedure3[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
+}
 
-// test expect {
-// 	-- TODO: test procedure4 properties here
-// 	fp4: {traces and always procedure4[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
-// 	fp42: {traces and always procedure4[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
-// 	fp43: {traces and always procedure4[Elevator] implies completedCurrRequest[Elevator]} for exactly 1 Elevator is sat
-// 	fp44: {traces and always procedure4[Elevator] implies newRequest[Elevator]} for exactly 1 Elevator is sat
-// 	fp45: {traces and always procedure4[Elevator] implies requestsUpDontMoveUp[Elevator]} for exactly 1 Elevator is sat
-// 	fp46: {traces and always procedure4[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
+test expect {
+	-- TODO: test procedure4 properties here
+	fp4: {traces and always procedure4[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
+	fp42: {traces and always procedure4[Elevator] implies canSwitchBeforeTop[Elevator]} for exactly 1 Elevator is sat
+	fp43: {traces and always procedure4[Elevator] implies completedCurrRequest[Elevator]} for exactly 1 Elevator is sat
+	fp44: {traces and always procedure4[Elevator] implies newRequest[Elevator]} for exactly 1 Elevator is sat
+	fp45: {traces and always procedure4[Elevator] implies requestsUpDontMoveUp[Elevator]} for exactly 1 Elevator is sat
+	fp46: {traces and always procedure4[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
 
-// }
+}
 
-// test expect {
-// 	-- TODO: test procedure5 properties here
-// 	fp5: {traces and always procedure5[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
-// 	fp52: {traces and always procedure5[Elevator] implies newRequest[Elevator]} for exactly 1 Elevator is sat
-// 	fp53: {traces and always procedure5[Elevator] implies noMoveUpIfRequestsBelow[Elevator]} for exactly 1 Elevator is sat
-// 	fp54: {traces and always procedure5[Elevator] implies stayStill[Elevator]} for exactly 1 Elevator is sat
-// 	fp55: {traces and always procedure5[Elevator] and requestsUpDontMoveUp[Elevator]} for exactly 1 Elevator is unsat
-// 	fp56: {traces and always procedure5[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
+test expect {
+	-- TODO: test procedure5 properties here
+	fp5: {traces and always procedure5[Elevator] implies forwardProgress[Elevator]} for exactly 1 Elevator is theorem
+	fp52: {traces and always procedure5[Elevator] implies newRequest[Elevator]} for exactly 1 Elevator is sat
+	fp53: {traces and always procedure5[Elevator] implies noMoveUpIfRequestsBelow[Elevator]} for exactly 1 Elevator is sat
+	fp54: {traces and always procedure5[Elevator] implies stayStill[Elevator]} for exactly 1 Elevator is sat
+	fp55: {traces and always procedure5[Elevator] and requestsUpDontMoveUp[Elevator]} for exactly 1 Elevator is unsat
+	fp56: {traces and always procedure5[Elevator] implies finishRequestsDown[Elevator]} for exactly 1 Elevator is sat
 
-// }
+}
 
 
 /*-------------------------------------*\
@@ -285,7 +285,7 @@ test expect {
 	// Now we accound for 2 elevators
 	// After running this, it seems newfp5 is the one that fails 
 	// newfp5: {traces and always procedure5[Elevator] implies forwardProgress[e]} for exactly 2 Elevator is theorem, FAILS
-	newFixedfp5: {elevatorControl implies multiElevatorFix} for exactly 2 Elevator is theorem  // New and passes
+	newFixedfp5: {elevatorControl implies forwardProgress} for exactly 2 Elevator is theorem  // New and passes
 	newfp52: {elevatorControl implies newRequest[Elevator]} for exactly 2 Elevator is sat
 	newfp53: {elevatorControl implies noMoveUpIfRequestsBelow[Elevator]} for exactly 2 Elevator is sat
 	newfp54: {elevatorControl implies stayStill[Elevator]} for exactly 2 Elevator is sat
